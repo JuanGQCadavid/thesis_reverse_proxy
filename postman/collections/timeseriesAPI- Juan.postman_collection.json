@@ -1,0 +1,542 @@
+{
+  "info": {
+    "_postman_id": "a6f2c9b1-f75b-4e7e-9f72-c4f6c1743c7d",
+    "name": "timeseriesAPI- Juan",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Update device",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "87c0e1a2-9cb9-4068-9412-6a1aa39b587d",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "d373b2b8-c4e1-4b4c-8a78-50f87116a274",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"type\": \"electricity-counter-mae\",\r\n  \"group\": [\r\n    \"electricity\"\r\n  ],\r\n  \"name\": \"128498\",\r\n  \"description\": \"Elektri mõõtur mäe tänaval v2\",\r\n  \"location_type\": \"address\",\r\n  \"lat\": 66.87,\r\n  \"long\": 344.92,\r\n  \"address\": {\r\n    \"house\": 13,\r\n    \"street\": \"Mäe\",\r\n    \"city\": \"Tartu\",\r\n    \"apartment\": 2\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/device/{{device_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "device",
+            "{{device_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "postDevice",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "87c0e1a2-9cb9-4068-9412-6a1aa39b587d",
+            "exec": [
+              "let uuid = require('uuid');",
+              "let guudi = uuid.v4().split(\"-\").join(\"_\");",
+              "pm.environment.set(\"device_id\", guudi);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "828687c2-7c10-4e49-96ee-2eb151c3911a",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"device_identity\": \"{{device_id}}\",\r\n  \"type\": \"electricity-counter-mae\",\r\n  \"group\": [\r\n    \"electricity\"\r\n  ],\r\n  \"name\": \"128498\",\r\n  \"description\": \"Elektri mõõtur mäe tänaval\",\r\n  \"location_type\": \"address\",\r\n  \"lat\": 66.87,\r\n  \"long\": 344.92,\r\n  \"address\": {\r\n    \"house\": 13,\r\n    \"street\": \"Mäe\",\r\n    \"city\": \"Tartu\",\r\n    \"apartment\": 2\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/device",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PostEvent",
+      "id": "b8b944e5-de9d-4796-a1e0-e3747472196a",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"events\": [\r\n    {\r\n      \"device_identity\": \"{{device_id}}\",\r\n      \"time\": \"2025-02-05T04:00:16.500Z\",\r\n      \"fragments\": [\r\n        {\r\n          \"fragment_type\": \"pedestrian-in\",\r\n          \"speed\": 6.4,\r\n          \"lane_id\": 1,\r\n          \"confidence\": 9,\r\n\t\t  \"pedestrian_id\": 680344\r\n        }\r\n      ],\r\n      \"event_type\": \"pedestrian-detector\",\r\n      \"text\": \"Detected pedestrian\"\r\n    }\r\n  ]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/event",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "event"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getEvent",
+      "id": "fd7ec513-86ad-415e-996e-17ff12e981e1",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/measurement?measurement_type=electricity&series_type=electricity-consumed&date_time_start=2025-02-07T04:00&date_time_end=2025-02-09T04:00&device_identity={{device_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "measurement"
+          ],
+          "query": [
+            {
+              "key": "measurement_type",
+              "value": "electricity"
+            },
+            {
+              "key": "series_type",
+              "value": "electricity-consumed"
+            },
+            {
+              "key": "date_time_start",
+              "value": "2025-02-07T04:00"
+            },
+            {
+              "key": "date_time_end",
+              "value": "2025-02-09T04:00"
+            },
+            {
+              "key": "device_identity",
+              "value": "{{device_id}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PostMeasurement",
+      "id": "65bcdc15-2367-4cb6-b918-96e5b606b7f0",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \"measurements\": [\r\n    {\r\n    \"time\": \"2025-02-05T04:00:16.500Z\",\r\n    \"device_identity\": \"{{device_id}}\",\r\n    \"measurement_type\": \"pedestrian\",\r\n    \"series\": [\r\n      {\r\n        \"series_type\": \"pedestrian-out\",\r\n        \"unit\": \"count\",\r\n        \"value\": 99\r\n      },\r\n      {\r\n        \"series_type\": \"pedestrian-in\",\r\n        \"unit\": \"count\",\r\n        \"value\": 77\r\n      }\r\n    ]\r\n    },\r\n    {\r\n    \"time\": \"2025-02-05T04:00:16.500Z\",\r\n    \"device_identity\": \"{{device_id}}\",\r\n    \"measurement_type\": \"pedestrian\",\r\n    \"series\": [\r\n      {\r\n        \"series_type\": \"pedestrian-out\",\r\n        \"unit\": \"count\",\r\n        \"value\": 55\r\n      },\r\n      {\r\n        \"series_type\": \"pedestrian-in\",\r\n        \"unit\": \"count\",\r\n        \"value\":44\r\n      }\r\n    ]\r\n}\r\n]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/measurement",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "measurement"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getMeasurement",
+      "id": "de18bb7b-00dc-4338-a7c6-a895c575cc49",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/measurement",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "measurement"
+          ],
+          "query": [
+            {
+              "key": "measurement_type",
+              "value": "car-count",
+              "disabled": true
+            },
+            {
+              "key": "series_type",
+              "value": "electricity-consumed",
+              "disabled": true
+            },
+            {
+              "key": "date_time_start",
+              "value": "2025-02-07T04:00",
+              "disabled": true
+            },
+            {
+              "key": "date_time_end",
+              "value": "2025-02-09T04:00",
+              "disabled": true
+            },
+            {
+              "key": "device_identity",
+              "value": "{{device_id}}",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CumuPostEvent",
+      "id": "c6f168fc-d1df-4733-b250-d4abca17a7b8",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{API_KEY_NAME}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{API_KEY}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"source\": {\r\n        \"id\": \"{{device_id}}\"\r\n    },\r\n    \"time\": \"2025-02-05T04:00:16.500Z\",\r\n    \"type\": \"avc_VehicleEvent\",\r\n    \"text\": \"Vehicle detected\",\r\n    \r\n    \"avc_Vehicle\": {\r\n        \"vehicle_class\": 2,\r\n        \"occupancy\": 660,\r\n        \"gap\": 12220,\r\n        \"length\": 12.9,\r\n        \"lane_id\": 2,\r\n        \"vehicle_id\": 4706611,\r\n        \"speed\": 70,\r\n        \"test\": 1\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/event/events",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "event",
+            "events"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CumuPostMeasurement",
+      "id": "7bc7cde7-d294-484e-86cc-f322d97021d9",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{API_KEY_NAME}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{API_KEY}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"type\": \"pedestrian-counter\",\r\n    \"device_identity\": \"{{device_id}}\",\r\n    \"source\": {\r\n        \"id\": \"128498\"\r\n    },\r\n    \"time\": \"2025-02-05T04:00:16.500Z\",\r\n    \"pedestrian\": {\r\n        \"pedestrianOut\": {\r\n            \"unit\": \"pc\",\r\n            \"value\": 12\r\n        }\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/measurement/measurements",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "measurement",
+            "measurements"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CumuPostMultipleMeasurements",
+      "id": "9659dc81-c657-4769-a23a-5733e3fb670d",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "username",
+              "value": "{{API_KEY_NAME}}",
+              "type": "string"
+            },
+            {
+              "key": "password",
+              "value": "{{API_KEY}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"measurements\": [\r\n        {\r\n            \"type\": \"pedestrian-counter\",\r\n            \"source\": {\r\n                \"id\": \"128498\"\r\n            },\r\n            \"time\": \"2025-02-05T04:00:16.500Z\",\r\n            \"pedestrian\": {\r\n                \"pedestrianOut\": {\r\n                    \"unit\": \"pc\",\r\n                    \"value\": 12\r\n                }\r\n            }\r\n        },\r\n        {\r\n            \"type\": \"pedestrian-counter\",\r\n            \"source\": {\r\n                \"id\": \"128498\"\r\n            },\r\n            \"time\": \"2025-02-05T05:00:16.500Z\",\r\n            \"pedestrian\": {\r\n                \"pedestrianOut\": {\r\n                    \"unit\": \"pc\",\r\n                    \"value\": 33\r\n                }\r\n            }\r\n        }\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/measurement/measurements",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "measurement",
+            "measurements"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getDevice",
+      "id": "42143d1c-9249-4a33-9fec-8c30f2e061db",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/device",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "device"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getDeviceID",
+      "id": "bf649386-fca3-42c7-953d-c4d8f6e42246",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/device/electricity_counter_mäe_13_2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "device",
+            "electricity_counter_mäe_13_2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteDevice",
+      "id": "e5d9a83b-ea15-449a-8889-7b3a8871d17b",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/device/128497",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "device",
+            "128497"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "postKey",
+      "id": "e13bbe62-1829-4cf2-bdff-1c0ec035c88d",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "    {\r\n        \"key_name\": \"pellekey\",\r\n        \"first_name\": \"Pelle\",\r\n        \"last_name\": \"Jakovits\",\r\n        \"email\": \"jakovits@ut.ee\",\r\n        \"phone\": \"+3727376422\",\r\n        \"key_status\": \"active\"\r\n    }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://{{base_url}}/key",
+          "protocol": "https",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "key"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getKeys",
+      "id": "6bdd0c55-bbb4-4e22-b962-fdcdc9e62258",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "api_key",
+            "value": "{{API_KEY}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/key",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "key"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
