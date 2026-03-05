@@ -31,3 +31,15 @@ Weird, this is for
 
 1621	741.119455	::1	::1	HTTP	171	GET /settings HTTP/1.1
 ```
+
+## Events
+
+```wireshark
+
+
+[…] avc_VehicleEvent,API_KEY=admin_key,device=36a783e5_230f_44e5_8fbf_b2c8f9ef7580,fragment_type=avc_Vehicle text="Vehicle detected",vehicle_class=2i,occupancy=660i,gap=12220i,length=12.9,lane_id=2i,vehicle_id=4706611i,speed=70i,test=1i 
+
+
+[…] avc_VehicleEvent,API_KEY=admin_key,device=36a783e5_230f_44e5_8fbf_b2c8f9ef7580,fragment_type=avc_Vehicle text="Vehicle detected",vehicle_class=2i,occupancy=660i,gap=12220i,length=12.9,lane_id=2i,vehicle_id=4706611i,speed=70i,test=1i 
+
+```

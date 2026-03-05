@@ -1,0 +1,7 @@
+HTTP/1.1 201 Created
+date: Sun, 01 Mar 2026 07:30:03 GMT
+server: uvicorn
+content-length: 282
+content-type: application/json
+
+{"type":"electricity-counter-mae","group":["electricity"],"description":"Elektri mõõtur mäe tänaval","location_type":"address","lat":66.87,"long":344.92,"address":{"house":13,"street":"Mäe","city":"Tartu","apartment":2},"device_identity":"26975928_397f_4e43_8301_b5c68b13a18c"}

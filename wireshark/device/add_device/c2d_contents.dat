@@ -1,0 +1,29 @@
+POST /device HTTP/1.1
+api_key: 3129
+Content-Type: application/json
+User-Agent: PostmanRuntime/7.51.1
+Accept: */*
+Postman-Token: 91c43682-2fa3-44f3-b90f-8a79f33c5941
+Host: localhost:8080
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 387
+
+{
+  "device_identity": "26975928_397f_4e43_8301_b5c68b13a18c",
+  "type": "electricity-counter-mae",
+  "group": [
+    "electricity"
+  ],
+  "name": "128498",
+  "description": "Elektri mõõtur mäe tänaval",
+  "location_type": "address",
+  "lat": 66.87,
+  "long": 344.92,
+  "address": {
+    "house": 13,
+    "street": "Mäe",
+    "city": "Tartu",
+    "apartment": 2
+  }
+}

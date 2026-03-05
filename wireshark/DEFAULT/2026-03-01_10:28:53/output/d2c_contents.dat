@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Server: questDB/1.0
+Date: Sun, 1 Mar 2026 08:29:49 GMT
+Transfer-Encoding: chunked
+Content-Type: application/json
+
+73
+{"release.type":"OSS","release.version":"8.2.1","acl.enabled":false,"posthog.enabled":false,"posthog.api.key":null}
+00
+
+HTTP/1.1 204 OK
+Server: questDB/1.0
+Date: Sun, 1 Mar 2026 08:29:49 GMT
+

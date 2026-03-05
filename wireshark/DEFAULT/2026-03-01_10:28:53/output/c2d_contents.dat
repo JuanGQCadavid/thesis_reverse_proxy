@@ -1,0 +1,14 @@
+GET /settings HTTP/1.1
+user-agent: questdb/python/4.1.0
+accept: */*
+host: localhost:9000
+
+POST /write?precision=n HTTP/1.1
+content-length: 214
+user-agent: questdb/python/4.1.0
+accept: */*
+host: localhost:9000
+content-type: text/plain; charset=utf-8
+authorization: Basic YW5kbWVzaXNlc3RhamE6YW5kbWUxNGVudHJ5OTFodHI=
+
+pedestrian-detector,API_KEY=admin_key,device=ee522cff_f4e0_4e03_8861_34884678f845,fragment_type=pedestrian-in text="Detected pedestrian",speed=6.4,lane_id=1i,confidence=9i,pedestrian_id=680344i 1738728016500000000

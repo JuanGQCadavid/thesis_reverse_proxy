@@ -1,0 +1,17 @@
+GET /settings HTTP/1.1
+user-agent: questdb/python/4.1.0
+accept: */*
+host: localhost:9000
+
+POST /write?precision=n HTTP/1.1
+content-length: 722
+user-agent: questdb/python/4.1.0
+accept: */*
+host: localhost:9000
+content-type: text/plain; charset=utf-8
+authorization: Basic YW5kbWVzaXNlc3RhamE6YW5kbWUxNGVudHJ5OTFodHI=
+
+measurement,measurement_type=pedestrian,series_type=pedestrian-out,device_identity=ee522cff_f4e0_4e03_8861_34884678f845,api_key=admin_key unit="count",value=99i 1738728016500000000
+measurement,measurement_type=pedestrian,series_type=pedestrian-in,device_identity=ee522cff_f4e0_4e03_8861_34884678f845,api_key=admin_key unit="count",value=77i 1738728016500000000
+measurement,measurement_type=pedestrian,series_type=pedestrian-out,device_identity=ee522cff_f4e0_4e03_8861_34884678f845,api_key=admin_key unit="count",value=55i 1738728016500000000
+measurement,measurement_type=pedestrian,series_type=pedestrian-in,device_identity=ee522cff_f4e0_4e03_8861_34884678f845,api_key=admin_key unit="count",value=44i 1738728016500000000
