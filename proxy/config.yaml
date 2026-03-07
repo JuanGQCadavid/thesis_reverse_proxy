@@ -1,0 +1,52 @@
+
+# Should I FUCKING Create a controller !?
+# CRD!?
+
+config:
+  # Dead letter queue
+  dlq: # MILESTONE: Sauna!
+    - type: kafka
+      name: principal
+      uri: "localhost:6543"
+
+  downstream:
+    principal: # MILESTONE: PIZZA
+      origin_server_uri: "localhost:9000" # MILESTONE: PIZZA
+      dlq: # MILESTONE: Sauna!
+        enable: true
+        name: principal
+    secondary: # Best effort policy # MILESTONE: BAR / Social event / MASSAGE
+      - origin_server_uri: "localhost:9001" # InfluxDB
+      - origin_server_uri: "localhost:9002" # QuestDB secondary
+
+  gateway: # ORDER MATTERS
+    # MILESTONE: Sauna!
+    - regex: "/write"
+      name: "questDB insert"
+      buffer:
+        compress:
+          enable: true
+          method: gzip
+        retain: # first one to match, required at least one
+          request: 100 # number IPL
+          timeout: 60 # 1m
+        default_response:
+          http:
+            version: HTTP/1.1
+            status: 204
+            headers:
+              Server: questDB/1.0
+
+    # MILESTONE: BAR / Social event / MASSAGE
+    # cache responses with GET
+    - regex: "/settings"
+      name: "cache settings"
+      cache: # Cache only works for GET request
+        enable: true
+        ttl: 300 # 5m
+
+    # MILESTONE: PIZZA
+    # TODO: Should I collect metricts for all of this?
+    # Proxy all
+    - regex: "/.*"
+      name: "proxy all"
