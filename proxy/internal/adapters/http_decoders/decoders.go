@@ -6,9 +6,10 @@ import (
 	"io"
 	"log"
 	"net"
+	"net/http"
 	"strings"
 
-	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/core/domain"
+	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/internal/core/domain"
 )
 
 var (
@@ -33,6 +34,42 @@ func (deco *HTTPDecoder) FromConn(conn net.Conn) (*domain.HttpPackage, error) {
 	return deco.stringToHttpPackage(body)
 }
 
+func (deco *HTTPDecoder) FromHttpResponse(resp *http.Response) (*domain.HttpPackage, error) {
+	var (
+		result = &domain.HttpPackage{
+			StatusLine: domain.HttpStatusLineMultipart{
+				HttpVersion: resp.Proto,
+				StatusCode:  resp.Status,
+			},
+			Headers: make(map[string]string),
+		}
+	)
+
+	// Getting Headers
+	for k, v := range resp.Header {
+		value := v[0]
+		if len(v) > 1 {
+			for _, vv := range v[1:] {
+				value += ", " + vv
+			}
+		}
+		result.Headers[k] = value
+	}
+
+	// Getting Body
+	body, err := deco.readCoon(resp.Body)
+
+	if err != nil {
+		return result, errors.Join(fmt.Errorf("err whilr trying to read the body"), err)
+	}
+
+	result.Body = body
+	result.BodyBytes = []byte(body)
+
+	log.Printf("%+v\n", result)
+	return result, nil
+}
+
 func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackage, error) {
 	if len(payload) == 0 {
 		log.Println("payload is empty")
@@ -41,7 +78,7 @@ func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackag
 
 	var (
 		headers    = make(map[string]string)
-		statusLine = ""
+		statusLine = domain.HttpStatusLineMultipart{}
 		body       = ""
 		onBody     = false
 	)
@@ -50,7 +87,10 @@ func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackag
 		log.Println("(", i, ")", "line:", line)
 
 		if i == 0 {
-			statusLine = line
+			tempStatusLine := strings.Split(line, " ")
+			statusLine.Method = tempStatusLine[0]
+			statusLine.Resource = tempStatusLine[1]
+			statusLine.HttpVersion = tempStatusLine[2]
 			continue
 		}
 
@@ -73,12 +113,13 @@ func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackag
 		StatusLine: statusLine,
 		Headers:    headers,
 		Body:       body,
+		BodyBytes:  []byte(body),
 	}, nil
 
 }
 
 // TODO: PERF: What about working with bytes instead of casting to string?
-func (deco *HTTPDecoder) readCoon(conn net.Conn) (string, error) {
+func (deco *HTTPDecoder) readCoon(conn io.Reader) (string, error) {
 	var (
 		buf        = make([]byte, 0)
 		tmp        = make([]byte, 256)

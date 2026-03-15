@@ -1,0 +1,15 @@
+
+# Should I FUCKING Create a controller !?
+# CRD!?
+
+config:
+  downstream:
+    principal: # MILESTONE: PIZZA
+      origin_server_uri: "localhost:9000" # MILESTONE: PIZZA
+  rules: # ORDER MATTERS
+    # MILESTONE: PIZZA
+    # TODO: Should I collect metricts for all of this?
+    # Proxy all
+    - regex: "/.*"
+      collect_metrics: true
+      name: "proxy all"

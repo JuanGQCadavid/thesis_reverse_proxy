@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/core/adapters/http_decoders"
+	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/internal/adapters/http_decoders"
 )
 
 func init() {}
