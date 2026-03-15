@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"log"
 	"sync"
 	"time"
 
@@ -19,27 +20,29 @@ func NewCache() *Cache {
 	}
 }
 
-func (cache *Cache) Get(path string) (*domain.CacheData, error) {
-	data, ok := cache.state[path]
+func (cache *Cache) Get(key domain.HttpStatusLineMultipart) (*domain.CacheData, error) {
+	log.Printf("Getting cache data for path %s", key.ToString())
+	data, ok := cache.state[key.ToString()]
 
 	if !ok {
 		return nil, nil
 	}
 
-	if data.TTL.After(time.Now()) {
+	if data.TTL.Before(time.Now()) {
 		cache.mux.Lock()
 		defer cache.mux.Unlock()
 
-		delete(cache.state, path)
+		delete(cache.state, key.ToString())
 		return nil, nil
 	}
 
 	return data, nil
 }
-func (cache *Cache) Save(path string, data *domain.CacheData) error {
+func (cache *Cache) Save(key domain.HttpStatusLineMultipart, data *domain.CacheData) error {
+	log.Printf("Saving cache data for path %s", key.ToString())
 	cache.mux.Lock()
 	defer cache.mux.Unlock()
 
-	cache.state[path] = data
+	cache.state[key.ToString()] = data
 	return nil
 }

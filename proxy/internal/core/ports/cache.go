@@ -5,6 +5,6 @@ import (
 )
 
 type Cache interface {
-	Get(path string) (*domain.CacheData, error)
-	Save(path string, data *domain.CacheData) error
+	Get(key domain.HttpStatusLineMultipart) (*domain.CacheData, error)
+	Save(key domain.HttpStatusLineMultipart, data *domain.CacheData) error
 }

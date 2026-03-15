@@ -66,7 +66,7 @@ func (deco *HTTPDecoder) FromHttpResponse(resp *http.Response) (*domain.HttpPack
 	result.Body = body
 	result.BodyBytes = []byte(body)
 
-	log.Printf("%+v\n", result)
+	//log.Printf("%+v\n", result)
 
 	return result, nil
 }
@@ -85,7 +85,7 @@ func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackag
 	)
 
 	for i, line := range strings.Split(payload, "\r\n") {
-		log.Println("(", i, ")", "line:", line)
+		//log.Println("(", i, ")", "line:", line)
 
 		if i == 0 {
 			tempStatusLine := strings.Split(line, " ")
@@ -97,7 +97,7 @@ func (deco *HTTPDecoder) stringToHttpPackage(payload string) (*domain.HttpPackag
 
 		if len(line) == 0 {
 			onBody = true
-			log.Println("Switching to body")
+			//log.Println("Switching to body")
 			continue
 		}
 

@@ -43,15 +43,18 @@ func (r *Rule) Execute(
 		return r.proxyRule.Execute(ctx, conn, userAgentRequest, ruleConfig)
 	}
 
-	data, err := r.repo.Get(userAgentRequest.StatusLine.ToString())
+	data, err := r.repo.Get(userAgentRequest.StatusLine)
 
 	if err != nil {
 		log.Printf("Error getting data from repo: %v", err)
 	}
 
 	if data != nil {
+		log.Println("Cache Hit")
 		return r.writeToConn(conn, data.Data)
 	}
+
+	log.Println("Cache Miss")
 
 	originServerResponse, err := utils.ProxyRequest(
 		ctx,
@@ -64,7 +67,7 @@ func (r *Rule) Execute(
 		return errors.Join(err, fmt.Errorf("err while forwarding connection"))
 	}
 
-	if err = r.repo.Save(originServerResponse.StatusLine.ToString(), &domain.CacheData{
+	if err = r.repo.Save(userAgentRequest.StatusLine, &domain.CacheData{
 		Data: originServerResponse,
 		TTL:  r.getTTL(ruleConfig),
 	}); err != nil {
