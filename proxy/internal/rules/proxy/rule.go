@@ -28,6 +28,7 @@ func (r *Rule) Execute(
 	ruleConfig *domain.RulesConfig,
 ) error {
 	log.Println("Executing rule", ruleConfig.RuleType)
+
 	userAgentRequest.
 		WithHost(r.config.Config.Downstream.Principal.OriginServerURI).
 		WithConnection(domain.KeepAlive)
@@ -46,6 +47,8 @@ func (r *Rule) Execute(
 	}
 
 	log.Println(" No error occurred")
+
+	log.Printf("%+v\n", originServerResponse)
 
 	if _, err := conn.Write(originServerResponse.ToBytes()); err != nil {
 		return errors.Join(err, fmt.Errorf("err while writing data"))
