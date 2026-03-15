@@ -116,5 +116,5 @@ func (p *HttpPackage) ToBytes() []byte {
 	if len(p.BodyBytes) == 0 {
 		return []byte(fmt.Sprintf("%s%s\r\n", statusLine, headers))
 	}
-	return []byte(fmt.Sprintf("%s%s\r\n%s ", statusLine, headers, body))
+	return []byte(fmt.Sprintf("%s%s\r\n%s", statusLine, headers, body))
 }
