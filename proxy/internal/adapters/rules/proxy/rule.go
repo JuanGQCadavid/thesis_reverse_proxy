@@ -29,24 +29,16 @@ func (r *Rule) Execute(
 ) error {
 	log.Println("Executing rule", ruleConfig.RuleType)
 
-	userAgentRequest.
-		WithHost(r.config.Config.Downstream.Principal.OriginServerURI).
-		WithConnection(domain.KeepAlive)
-
-	if ruleConfig.Proxy.Compress.Enable {
-		userAgentRequest.WithBodyEncryption(domain.Gzip)
-	}
-
-	originServerResponse, err := utils.ForwardConnection(
-		userAgentRequest,
+	originServerResponse, err := utils.ProxyRequest(
+		ctx,
 		r.config.Config.Downstream.Principal.OriginServerURI,
+		userAgentRequest,
+		ruleConfig,
 	)
 
 	if err != nil {
 		return errors.Join(err, fmt.Errorf("err while forwarding connection"))
 	}
-
-	log.Println(" No error occurred")
 
 	log.Printf("%+v\n", originServerResponse)
 

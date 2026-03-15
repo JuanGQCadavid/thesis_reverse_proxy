@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -20,6 +21,32 @@ func CloseDial(ln net.Listener) {
 	if err := ln.Close(); err != nil {
 		log.Fatal("err while closing the listener ", err.Error())
 	}
+}
+
+func ProxyRequest(
+	ctx context.Context,
+	originServer string,
+	userAgentRequest *domain.HttpPackage,
+	ruleConfig *domain.RulesConfig,
+) (*domain.HttpPackage, error) {
+	userAgentRequest.
+		WithHost(originServer).
+		WithConnection(domain.KeepAlive)
+
+	if ruleConfig.Proxy.Compress.Enable {
+		userAgentRequest.WithBodyEncryption(domain.Gzip)
+	}
+
+	originServerResponse, err := ForwardConnection(
+		userAgentRequest,
+		originServer,
+	)
+
+	if err != nil {
+		return nil, errors.Join(err, fmt.Errorf("err while forwarding connection"))
+	}
+
+	return originServerResponse, nil
 }
 
 func ForwardConnection(req *domain.HttpPackage, originServer string) (*domain.HttpPackage, error) {

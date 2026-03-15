@@ -74,6 +74,11 @@ func (p *HttpPackage) WithConnection(conType HttpConnectionType) *HttpPackage {
 }
 
 func (p *HttpPackage) WithBodyEncryption(encryptionType HttpBodyEncryption) *HttpPackage {
+	if len(p.BodyBytes) == 0 {
+		log.Println("No body, omitting encryption")
+		return p
+	}
+
 	switch encryptionType {
 	case Gzip:
 		log.Println("Encrypting using gzip")
