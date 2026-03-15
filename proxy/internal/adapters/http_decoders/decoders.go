@@ -67,6 +67,7 @@ func (deco *HTTPDecoder) FromHttpResponse(resp *http.Response) (*domain.HttpPack
 	result.BodyBytes = []byte(body)
 
 	log.Printf("%+v\n", result)
+
 	return result, nil
 }
 

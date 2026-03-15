@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+
 	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/internal/adapters/http_decoders"
 	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/internal/core/domain"
 	"github.com/JuanGQCadavid/thesis_reverse_proxy/poxy/internal/core/ports"
@@ -13,17 +15,22 @@ func New() *Service {
 }
 
 func (srv *Service) WithConfig(config *domain.ServiceConfiguration) *Service {
-	srv.Config = config
+	log.Println("Configuring rules")
 
-	for _, rule := range config.Config.RulesConfig {
-		if rule.Cache != nil {
+	for i, rule := range config.Config.RulesConfig {
+		if rule.Cache.Enable {
+			log.Println("rule ", rule, " is cache")
 			rule.RuleType = domain.CACHE_RULE
-		} else if rule.Buffer != nil {
+		} else if rule.Buffer.Enable {
+			log.Println("rule ", rule, " is buffer")
 			rule.RuleType = domain.BUFFER_RULE
 		} else {
+			log.Println("rule ", rule, " is proxy")
 			rule.RuleType = domain.PROXY_RULE
 		}
+		config.Config.RulesConfig[i] = rule
 	}
+	srv.Config = config
 
 	return srv
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"log"
@@ -18,6 +17,19 @@ type Service struct {
 	Config   *domain.ServiceConfiguration
 	RulesMap map[domain.RuleType]ports.Rule
 	decoder  http_decoders.HTTPDecoder
+}
+
+var (
+	PathNotInConfig []byte
+)
+
+func init() {
+	PathNotInConfig = domain.NewHttpPackage().
+		WithMultipart(domain.HttpStatusLineMultipart{
+			HttpVersion: "HTTP/1.1",
+			StatusCode:  "404 Not Found",
+		}).
+		ToBytes()
 }
 
 func (srv *Service) Run() error {
@@ -48,12 +60,43 @@ func (srv *Service) handleConnV2(conn net.Conn) {
 		return
 	}
 
+	var (
+		ruleExecuted bool = false
+		//ruleError    error = nil
+	)
+
+	log.Printf("%+v\n", srv.Config)
+
 	for _, rule := range srv.Config.Config.RulesConfig {
-		// TODO: Evaluate regex at init
 		if match, _ := regexp.Match(rule.Regex, []byte(userAgentRequest.StatusLine.Resource)); match {
-			if err = srv.RulesMap[rule.RuleType].Execute(context.Background(), conn, userAgentRequest); err != nil {
-				log.Println("err while executing rule", err.Error())
-			}
+			log.Println("match", rule.Regex)
+			log.Printf("%+v\n", rule)
+			//ruleError = srv.RulesMap[rule.RuleType].Execute(context.Background(), conn, userAgentRequest, &rule)
+			srv.ruleProxy(conn, userAgentRequest)
+			ruleExecuted = true
+			break
 		}
+	}
+	//// TODO: What should I do
+	//// DLQ?
+	//// error to user?
+	//if ruleError != nil {
+	//	log.Println("err while executing rule", ruleError.Error())
+	//	conn.Write(
+	//		domain.NewHttpPackage().
+	//			WithMultipart(domain.HttpStatusLineMultipart{
+	//				HttpVersion: "HTTP/1.1",
+	//				StatusCode:  "404 Not Found",
+	//			}).
+	//			WithBody(ruleError.Error()).
+	//			ToBytes(),
+	//	)
+	//	return
+	//}
+	//
+	if !ruleExecuted {
+		log.Printf("%s request does not match any rule", userAgentRequest.StatusLine.Resource)
+		conn.Write(PathNotInConfig)
+		return
 	}
 }

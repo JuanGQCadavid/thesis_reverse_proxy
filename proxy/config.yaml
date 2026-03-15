@@ -23,6 +23,10 @@ config:
     # MILESTONE: Sauna!
     - regex: "/write"
       name: "questDB insert"
+      proxy:
+        compress:
+          enable: true
+          method: gzip
       buffer:
         compress:
           enable: true
@@ -50,3 +54,7 @@ config:
     # Proxy all
     - regex: "/.*"
       name: "proxy all"
+      proxy:
+        compress:
+          enable: true
+          method: gzip

@@ -8,5 +8,10 @@ import (
 )
 
 type Rule interface {
-	Execute(ctx context.Context, conn net.Conn, userAgentRequest *domain.HttpPackage) error
+	Execute(
+		ctx context.Context,
+		conn net.Conn,
+		userAgentRequest *domain.HttpPackage,
+		rule *domain.RulesConfig,
+	) error
 }

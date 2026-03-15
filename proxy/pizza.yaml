@@ -13,3 +13,7 @@ config:
     - regex: "/.*"
       collect_metrics: true
       name: "proxy all"
+      proxy:
+        compress:
+          enable: true
+          method: gzip

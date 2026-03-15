@@ -1,11 +1,11 @@
 package domain
 
-type RuleType uint8
+type RuleType string
 
 const (
-	CACHE_RULE RuleType = iota
-	PROXY_RULE
-	BUFFER_RULE
+	CACHE_RULE  RuleType = "CACHE_RULE"
+	PROXY_RULE  RuleType = "PROXY_RULE"
+	BUFFER_RULE RuleType = "BUFFER_RULE"
 )
 
 type ServiceConfiguration struct {
@@ -18,14 +18,33 @@ type GatewayConfig struct {
 }
 
 type RulesConfig struct {
-	Regex          string    `json:"regex"`
-	Name           string    `json:"name"`
-	CollectMetrics bool      `json:"collect_metrics"`
-	Cache          *struct{} `json:"cache"`  // HOLDER
-	Buffer         *struct{} `json:"buffer"` // HOLDER
+	Regex          string       `json:"regex"`
+	Name           string       `json:"name"`
+	CollectMetrics bool         `json:"collect_metrics"`
+	Cache          CacheConfig  `json:"cache"`  // HOLDER
+	Buffer         BufferConfig `json:"buffer"` // HOLDER
+	Proxy          ProxyConfig  `json:"proxy"`
 
 	// Internals
 	RuleType RuleType
+}
+
+type CacheConfig struct {
+	Enable bool   `json:"enable"`
+	TTL    string `json:"ttl"`
+}
+
+type BufferConfig struct {
+	Enable bool `json:"enable"`
+}
+
+type ProxyConfig struct {
+	Compress CompressConfig `json:"compress"`
+}
+
+type CompressConfig struct {
+	Enable         bool   `json:"enable"`
+	CompressMethod string `json:"method"`
 }
 
 type DownstreamConfig struct {

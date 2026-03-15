@@ -14,6 +14,21 @@ type HttpPackage struct {
 	BodyBytes  []byte
 }
 
+func NewHttpPackage() *HttpPackage {
+	return &HttpPackage{
+		Headers: make(map[string]string),
+	}
+}
+func (p *HttpPackage) WithMultipart(StatusLine HttpStatusLineMultipart) *HttpPackage {
+	p.StatusLine = StatusLine
+	return p
+}
+func (p *HttpPackage) WithBody(body string) *HttpPackage {
+	p.Body = body
+	p.BodyBytes = []byte(body)
+	return p
+}
+
 type HttpStatusLineMultipart struct {
 	// Standard
 	HttpVersion string
@@ -58,7 +73,6 @@ func (p *HttpPackage) WithConnection(conType HttpConnectionType) *HttpPackage {
 	return p
 }
 
-// TODO: Missing test
 func (p *HttpPackage) WithBodyEncryption(encryptionType HttpBodyEncryption) *HttpPackage {
 	switch encryptionType {
 	case Gzip:
